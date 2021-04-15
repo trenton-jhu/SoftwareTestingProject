@@ -27,7 +27,7 @@ public class KnightTest {
     }
 
     @Test
-    public void KnightMove() {
+    public void testKnightMove() {
         Set<Cell> expected = new HashSet<>();
         expected.add(board[6][5]);
         expected.add(board[5][6]);
@@ -36,7 +36,7 @@ public class KnightTest {
     }
 
     @Test
-    public void KnightMoveBlockedByOwnPiece() {
+    public void testKnightMoveBlockedByOwnPiece() {
 		Pawn pawn1 = new Pawn("WP01","/White_Pawn.png",0);
 		Pawn pawn2 = new Pawn("BP01","/Black_Pawn.png",1);
         Cell c1 = new Cell(1, 2, pawn1);
@@ -52,7 +52,7 @@ public class KnightTest {
     }
 
     // @Test
-    // public void KnightTestInvalidMove() {
+    // public void testKnightTestInvalidMove() {
     //     Set<Cell> result = new HashSet<>(knight.move(board, -1, -1));
     //     assertEquals(new HashSet<Cell>(), result);
     //     // Should return empty

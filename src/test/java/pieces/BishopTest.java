@@ -21,7 +21,7 @@ public class BishopTest {
     }
 
     @Test
-    public void BishopMoveDiagonal() {
+    public void testBishopMoveDiagonal() {
         System.out.println(bishop.move(board, 0, 0));
     }
 }
