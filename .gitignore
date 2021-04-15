@@ -3,5 +3,7 @@
 .classpath
 .project
 .settings
+.DS_Store
+.vscode
 bin
 build
