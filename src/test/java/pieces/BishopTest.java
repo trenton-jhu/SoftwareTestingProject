@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BishopTest {
 
-    private static final String ID = "WP01";
-    private static final String RES = "/White_Pawn.png";
+    private static final String ID = "WB01";
+    private static final String RES = "/White_Bishop.png";
 
     private Bishop bishop;
     private Cell[][] board;

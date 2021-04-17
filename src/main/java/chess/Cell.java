@@ -36,7 +36,12 @@ public class Cell extends JPanel implements Cloneable{
 	 if(p!=null)
 		 setPiece(p);
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.format("(%d, %d)", x, y);
+	}
+
 	//A constructor that takes a cell as argument and returns a new cell will the same data but different reference
 	public Cell(Cell cell) throws CloneNotSupportedException
 	{
