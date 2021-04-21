@@ -28,40 +28,49 @@ public class QueenTest {
     }
 
     @Test
+    public void testQueenConstructor() {
+        assertEquals(queen.getId(), ID);
+        assertEquals(queen.getPath(), RES);
+        assertEquals(queen.getcolor(), 0);
+    }
+
+    /**
+     * Test Queen starting at G6 on empty board
+     */
+    @Test
     public void testQueenMove() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
-                board[0][0],
-                board[1][1],
-                board[2][2],
-                board[4][4],
-                board[5][5],
-                board[6][6],
-                board[7][7],
-                board[0][6],
                 board[1][5],
-                board[2][4],
-                board[4][2],
-                board[5][1],
-                board[6][0],
-                board[3][0],
-                board[3][1],
-                board[3][2],
-                board[3][4],
-                board[3][5],
-                board[3][6],
+                board[0][4],
                 board[3][7],
-                board[0][3],
-                board[1][3],
-                board[2][3],
-                board[4][3],
+                board[1][7],
+                board[3][5],
+                board[4][4],
                 board[5][3],
-                board[6][3],
-                board[7][3]
+                board[6][2],
+                board[7][1],
+                board[0][6],
+                board[1][6],
+                board[3][6],
+                board[4][6],
+                board[5][6],
+                board[6][6],
+                board[7][6],
+                board[2][0],
+                board[2][1],
+                board[2][2],
+                board[2][3],
+                board[2][4],
+                board[2][5],
+                board[2][7]
         ));
-        Set<Cell> result = new HashSet<>(queen.move(board, 3, 3));
+        Set<Cell> result = new HashSet<>(queen.move(board, 2, 6));
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Queen starting at C8 on empty board
+     */
     @Test
     public void testQueenMoveAtEdge() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
@@ -91,6 +100,9 @@ public class QueenTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Queen starting at A1 on empty board
+     */
     @Test
     public void testQueenMoveAtCorner() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
@@ -120,6 +132,9 @@ public class QueenTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Queen starting at B6 blocked on all sides except left row and upper-right diagonal
+     */
     @Test
     public void testQueenMoveBlocked() {
         board[1][0] = new Cell(1, 0, new Pawn(ID, RES, 0));
@@ -137,6 +152,9 @@ public class QueenTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Queen starting at B4 blocked on all sides
+     */
     @Test
     public void testQueenMoveBlockedAllSides() {
         board[3][0] = new Cell(3, 0, new Pawn(ID, RES, 0));
@@ -151,6 +169,9 @@ public class QueenTest {
         assertEquals(new ArrayList<Cell>(), result);
     }
 
+    /**
+     * Test Queen starting at D5 with an enemy piece in left path
+     */
     @Test
     public void testQueenMoveWithOneCapture() {
         board[3][1] = new Cell(3, 1, new Pawn(ID, RES, 1));
@@ -186,6 +207,9 @@ public class QueenTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Queen starting at D5 with enemy pieces in all path except left path
+     */
     @Test
     public void testQueenMoveWithCaptures() {
         board[0][0] = new Cell(0, 0, new Pawn(ID, RES, 1));

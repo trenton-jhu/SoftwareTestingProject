@@ -28,26 +28,35 @@ public class BishopTest {
     }
 
     @Test
+    public void testBishopConstructor() {
+        assertEquals(bishop.getId(), ID);
+        assertEquals(bishop.getPath(), RES);
+        assertEquals(bishop.getcolor(), 0);
+    }
+
+    /**
+     * Test Bishop starting at G6 on empty board
+     */
+    @Test
     public void testBishopMove() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
-                board[0][0],
-                board[1][1],
-                board[2][2],
-                board[4][4],
-                board[5][5],
-                board[6][6],
-                board[7][7],
-                board[0][6],
                 board[1][5],
-                board[2][4],
-                board[4][2],
-                board[5][1],
-                board[6][0]
+                board[0][4],
+                board[3][7],
+                board[1][7],
+                board[3][5],
+                board[4][4],
+                board[5][3],
+                board[6][2],
+                board[7][1]
         ));
-        Set<Cell> result = new HashSet<>(bishop.move(board, 3, 3));
+        Set<Cell> result = new HashSet<>(bishop.move(board, 2, 6));
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Bishop starting at C8 on empty board
+     */
     @Test
     public void testBishopMoveAtEdge() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
@@ -63,6 +72,9 @@ public class BishopTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Bishop starting at A1 on empty board
+     */
     @Test
     public void testBishopMoveAtCorner() {
         Set<Cell> expected = new HashSet<>(Arrays.asList(
@@ -78,6 +90,9 @@ public class BishopTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Bishop starting at B6 blocked on all diagonals except lower-left diagonal
+     */
     @Test
     public void testBishopMoveBlocked() {
         board[1][0] = new Cell(1, 0, new Pawn(ID, RES, 0));
@@ -88,6 +103,9 @@ public class BishopTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Bishop starting at F8 blocked on lower-left and lower-right diagonals
+     */
     @Test
     public void testBishopMoveBlockedAllSides() {
         board[1][4] = new Cell(1, 4, new Pawn(ID, RES, 0));
@@ -96,6 +114,9 @@ public class BishopTest {
         assertEquals(new ArrayList<Cell>(), result);
     }
 
+    /**
+     * Test Bishop starting at D5 with an enemy piece in lower-right diagonal path
+     */
     @Test
     public void testBishopMoveWithOneCapture() {
         board[6][6] = new Cell(6, 6, new Pawn(ID, RES, 1));
@@ -117,6 +138,9 @@ public class BishopTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test Bishop starting at D5 with enemy pieces in 3 diagonal paths
+     */
     @Test
     public void testBishopMoveWithCaptures() {
         board[2][2] = new Cell(2, 2, new Pawn(ID, RES, 1));
