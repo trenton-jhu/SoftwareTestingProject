@@ -13,7 +13,7 @@ repositories {
 }
 
 pitest {
-    junit5PluginVersion = '0.12'
+    junit5PluginVersion = '0.14'
     targetClasses = ['pieces.*']
     targetTests = ['pieces.*']
     threads = 4

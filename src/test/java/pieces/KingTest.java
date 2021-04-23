@@ -32,19 +32,54 @@ public class KingTest {
         }
     }
 
+    // Added after mutation
+    @Test
+    public void testKnightConstructor() {
+        assertEquals(king.getId(), "WK");
+        assertEquals(king.getPath(), "/White_King.png");
+        assertEquals(king.getcolor(), 0);
+    }
+
     @Test
     public void testGetXGetY() {
         assertEquals(3, king.getx());
         assertEquals(4, king.gety());
     }
 
+    // Added after mutation
     @Test
     public void testKingMove() {
+        Set<Cell> expected = new HashSet<>();
+        expected.add(board[6][6]);
+        expected.add(board[6][5]);
+        expected.add(board[6][4]);
+        expected.add(board[5][4]);
+        expected.add(board[4][4]);
+        expected.add(board[4][5]);
+        expected.add(board[4][6]);
+        expected.add(board[5][6]);
+        Set<Cell> result = new HashSet<>(king.move(board, 5, 5));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testKingMoveAtEdge() {
         Set<Cell> expected = new HashSet<>();
         expected.add(board[6][6]);
         expected.add(board[6][7]);
         expected.add(board[7][6]);
         Set<Cell> result = new HashSet<>(king.move(board, 7, 7));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation
+    @Test
+    public void testKingMoveAtEdge2() {
+        Set<Cell> expected = new HashSet<>();
+        expected.add(board[0][1]);
+        expected.add(board[1][1]);
+        expected.add(board[1][0]);
+        Set<Cell> result = new HashSet<>(king.move(board, 0, 0));
         assertEquals(expected, result);
     }
 
@@ -64,9 +99,17 @@ public class KingTest {
         assertEquals(expected, result);
     }
 
-    // black king is (0, 3)
-    // white king is (7, 3)
-    // queen is to the right at y=4
+    // Added after mutation
+    @Test
+    public void testKingClearPossibleMoves() {
+        king.move(board, 1, 1);
+        Set<Cell> expected = new HashSet<>();
+        expected.add(board[6][6]);
+        expected.add(board[6][7]);
+        expected.add(board[7][6]);
+        Set<Cell> result = new HashSet<>(king.move(board, 7, 7));
+        assertEquals(expected, result);
+    }
 
     @ParameterizedTest
     @MethodSource({"dangerLeftRightUpDown", "dangerDiagonal", "dangerKnight", "dangerKing", "dangerPawn"})
@@ -97,6 +140,8 @@ public class KingTest {
             Arguments.of(queenb, null, 2, 4, true), 
             Arguments.of(rookb, null, 2, 4, true),
             Arguments.of(knightb, null, 2, 4, false),
+            //Added after mutation
+            Arguments.of(rookb, null, 0, 4, true),
             // Down
             Arguments.of(queenw, null, 3, 6, false),
             Arguments.of(queenb, null, 3, 6, true), 
@@ -106,7 +151,9 @@ public class KingTest {
             Arguments.of(queenw, null, 3, 2, false),
             Arguments.of(queenb, null, 3, 2, true), 
             Arguments.of(rookb, null, 3, 2, true),
-            Arguments.of(knightb, null, 3, 2, false)
+            Arguments.of(knightb, null, 3, 2, false),
+            //Added after mutation
+            Arguments.of(rookb, null, 3, 0, true)
         );
     }
 
@@ -116,6 +163,7 @@ public class KingTest {
 		Queen queenb = new Queen("BQ","/Black_Queen.png", 1);
 		Bishop bishopb = new Bishop("BB01","/Black_Bishop.png", 1);
 		Knight knightb = new Knight("BK01","/Black_Knight.png", 1);
+        King king_alt = new King("WK","/White_King.png", 0, 4, 4);
         
         return Stream.of(
             // Top Right
@@ -123,21 +171,29 @@ public class KingTest {
             Arguments.of(queenb, null, 1, 6, true), // queen
             Arguments.of(bishopb, null, 1, 6, true), // bishop
             Arguments.of(knightb, null, 1, 6, false), // other piece
+            // Added after mutation
+            Arguments.of(bishopb, null, 0, 7, true),
             // Top Left
             Arguments.of(queenw, null, 1, 2, false),
             Arguments.of(queenb, null, 1, 2, true), 
             Arguments.of(bishopb, null, 1, 2, true),
             Arguments.of(knightb, null, 1, 2, false),
+            // Added after mutation
+            Arguments.of(bishopb, king_alt, 0, 0, true),
             // Bottom Right
             Arguments.of(queenw, null, 5, 6, false),
             Arguments.of(queenb, null, 5, 6, true), 
             Arguments.of(bishopb, null, 5, 6, true),
             Arguments.of(knightb, null, 5, 6, false),
+            // Added after mutation
+            Arguments.of(bishopb, king_alt, 7, 7, true),
             // Bottom Left
             Arguments.of(queenw, null, 5, 2, false),
             Arguments.of(queenb, null, 5, 2, true), 
             Arguments.of(bishopb, null, 5, 2, true),
-            Arguments.of(knightb, null, 5, 2, false)
+            Arguments.of(knightb, null, 5, 2, false),
+            // Added after mutation
+            Arguments.of(bishopb, null, 7, 0, true)
         );
     }
 
@@ -147,6 +203,8 @@ public class KingTest {
 		Knight knightw = new Knight("WK01","/White_Knight.png", 0);
 		Knight knightb = new Knight("BK01","/Black_Knight.png", 1);
 		Bishop bishopb = new Bishop("BB01","/Black_Bishop.png", 1);
+		King kingw1 = new King("WK","/White_King.png", 0, 1, 1);
+		King kingw2 = new King("WK","/White_King.png", 0, 6, 6);
 
         return Stream.of(
             // White Knight
@@ -154,13 +212,26 @@ public class KingTest {
             // Black Knight
             Arguments.of(knightb, null, 2, 2, true),
             // Other Piece in Knight Position
-            Arguments.of(bishopb, null, 2, 2, false)
+            Arguments.of(bishopb, null, 2, 2, false),
+            // Added after mutation
+            Arguments.of(knightb, null, 4, 2, true),
+            Arguments.of(knightb, null, 4, 6, true),
+            Arguments.of(knightb, null, 5, 3, true),
+            Arguments.of(knightb, null, 5, 5, true),
+            // Arguments.of(knightb, null, 2, 2, true),
+            Arguments.of(knightb, null, 2, 6, true),
+            Arguments.of(knightb, null, 1, 3, true),
+            Arguments.of(knightb, null, 1, 5, true),
+            Arguments.of(knightb, kingw1, 0, 3, true),
+            Arguments.of(knightb, kingw1, 3, 0, true),
+            Arguments.of(knightb, kingw2, 7, 4, true),
+            Arguments.of(knightb, kingw2, 4, 7, true)
         );
     }
 
     @TestFactory
     private static Stream<Arguments> dangerKing() {
-		King kingw = new King("WK","/White_King.png", 0, 0, 0); // won't happen
+		King kingw = new King("WK","/White_King.png", 0, 0, 0);
 		King kingb = new King("BK","/Black_King.png", 1, 0, 0);
 		Bishop bishopb = new Bishop("BB01","/Black_Bishop.png", 1);
 
@@ -188,7 +259,20 @@ public class KingTest {
             Arguments.of(null, king5, 0, 0, false),
             Arguments.of(null, king6, 0, 0, false),
             Arguments.of(null, king7, 0, 0, false),
-            Arguments.of(null, king8, 0, 0, false)
+            Arguments.of(null, king8, 0, 0, false),
+            // Added after mutation
+            Arguments.of(kingb, null, 2, 3, true),
+            Arguments.of(kingb, null, 2, 4, true),
+            Arguments.of(kingb, null, 2, 5, true),
+            Arguments.of(kingb, null, 3, 5, true),
+            Arguments.of(kingb, null, 4, 5, true),
+            Arguments.of(kingb, null, 4, 3, true),
+            Arguments.of(kingb, null, 3, 3, true),
+            Arguments.of(kingb, kingw, 1, 0, true),
+            Arguments.of(kingb, kingw, 0, 1, true),
+            Arguments.of(kingb, king2, 6, 7, true),
+            Arguments.of(kingb, king2, 7, 6, true)
+
         );
     }
 
