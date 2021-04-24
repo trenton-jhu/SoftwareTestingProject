@@ -68,6 +68,39 @@ public class QueenTest {
         assertEquals(expected, result);
     }
 
+    // Added after mutation analysis
+    @Test
+    public void testQueenMoveClearPossibleMoves() {
+        queen.move(board, 3, 3);
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[1][5],
+                board[0][4],
+                board[3][7],
+                board[1][7],
+                board[3][5],
+                board[4][4],
+                board[5][3],
+                board[6][2],
+                board[7][1],
+                board[0][6],
+                board[1][6],
+                board[3][6],
+                board[4][6],
+                board[5][6],
+                board[6][6],
+                board[7][6],
+                board[2][0],
+                board[2][1],
+                board[2][2],
+                board[2][3],
+                board[2][4],
+                board[2][5],
+                board[2][7]
+        ));
+        Set<Cell> result = new HashSet<>(queen.move(board, 2, 6));
+        assertEquals(expected, result);
+    }
+
     /**
      * Test Queen starting at C8 on empty board
      */

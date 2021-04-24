@@ -19,7 +19,9 @@ import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Uses PowerMock which does not support JUnit 5, so need to write with IntelliJ instead of Gradle
+ * Uses PowerMock which does not support JUnit 5, so need to use junit API instead of junit.jupiter API
+ * Must run with IntelliJ test runner, Gradle will not recognize tests.
+ *
  * There may be an Illegal Reflective Access Operation warning, this is due to PowerMock not quite
  * compatible with Java SDK 11, but this warning can be ignored.
  * Switching to Java SDK 8 will eliminate the warnings.

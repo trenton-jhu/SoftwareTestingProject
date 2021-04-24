@@ -54,6 +54,25 @@ public class BishopTest {
         assertEquals(expected, result);
     }
 
+    // Added after mutation analysis
+    @Test
+    public void testBishopMoveClearPossibleMoves() {
+        bishop.move(board, 3, 3);
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[1][5],
+                board[0][4],
+                board[3][7],
+                board[1][7],
+                board[3][5],
+                board[4][4],
+                board[5][3],
+                board[6][2],
+                board[7][1]
+        ));
+        Set<Cell> result = new HashSet<>(bishop.move(board, 2, 6));
+        assertEquals(expected, result);
+    }
+
     /**
      * Test Bishop starting at C8 on empty board
      */
