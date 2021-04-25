@@ -25,6 +25,14 @@ public class RookTest {
         }
     }
 
+    // Added after mutation analysis
+    @Test
+    public void testRookConstructor() {
+        assertEquals(rook.getId(), "WR01");
+        assertEquals(rook.getPath(), "/White_Rook.png");
+        assertEquals(rook.getcolor(), 0);
+    }
+
     @Test
     public void testRookMove() {
         // Test with E4 rook
@@ -71,6 +79,30 @@ public class RookTest {
                 board[5][4],
                 board[4][3],
                 board[4][5]
+        ));
+        Set<Cell> result = new HashSet<>(rook.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testRookClearPossibleMoves() {
+        rook.move(board, 1, 1);
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[4][0],
+                board[4][1],
+                board[4][2],
+                board[4][3],
+                board[4][5],
+                board[4][6],
+                board[4][7],
+                board[0][4],
+                board[1][4],
+                board[2][4],
+                board[3][4],
+                board[5][4],
+                board[6][4],
+                board[7][4]
         ));
         Set<Cell> result = new HashSet<>(rook.move(board, 4, 4));
         assertEquals(expected, result);
