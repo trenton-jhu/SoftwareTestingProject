@@ -27,6 +27,14 @@ public class PawnTest {
         }
     }
 
+    // Added after mutation analysis
+    @Test
+    public void testPawnConstructor() {
+        assertEquals(whitePawn.getId(), "WP01");
+        assertEquals(whitePawn.getPath(), "/White_Pawn.png");
+        assertEquals(whitePawn.getcolor(), 0);
+    }
+
     @Test
     public void testWhitePawnMoveInitial() {
         // Test with E2 white pawn
@@ -171,6 +179,69 @@ public class PawnTest {
                 board[4][5]
         ));
         Set<Cell> result = new HashSet<>(blackPawn.move(board, 3, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testWhitePawnMoveSingleLeftCapture() {
+        // Test with E4 white pawn and D5 black pawn
+        board[3][3] = new Cell(3, 3, new Pawn("BP02", "/Black_Pawn.png", 1));
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[3][4],
+                board[3][3]
+        ));
+        Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testWhitePawnMoveSingleRightCapture() {
+        // Test with E4 white pawn and F5 black pawn
+        board[3][5] = new Cell(3, 5, new Pawn("BP02", "/Black_Pawn.png", 1));
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[3][4],
+                board[3][5]
+        ));
+        Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testBlackPawnMoveSingleLeftCapture() {
+        // Test with E4 black pawn and D3 white pawn
+        board[5][3] = new Cell(5, 3, new Pawn("WP02", "/White_Pawn.png", 0));
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[5][4],
+                board[5][3]
+        ));
+        Set<Cell> result = new HashSet<>(blackPawn.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testBlackPawnMoveSingleRightCapture() {
+        // Test with E4 black pawn and F3 white pawn
+        board[5][5] = new Cell(5, 5, new Pawn("WP02", "/White_Pawn.png", 0));
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[5][4],
+                board[5][5]
+        ));
+        Set<Cell> result = new HashSet<>(blackPawn.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    // Added after mutation analysis
+    @Test
+    public void testPawnClearPossibleMoves() {
+        whitePawn.move(board, 5, 4);
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[3][4]
+        ));
+        Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 4));
         assertEquals(expected, result);
     }
 }
