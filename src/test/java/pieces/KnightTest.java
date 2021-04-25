@@ -7,16 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class KnightTest {
 
-    private static Knight knight;
-    private static Cell[][] board;
+    private Knight knight;
+    private Cell[][] board;
 
-    @BeforeAll
-    public static void setup() {
+    @BeforeEach
+    public void setup() {
         knight = new Knight("WK01","/White_Knight.png", 0);
         board = new chess.Cell[8][8];
         for (int i = 0; i < board.length; i++) {

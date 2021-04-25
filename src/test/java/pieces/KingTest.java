@@ -17,8 +17,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class KingTest {
 
-    private static King king;
-    private static Cell[][] board;
+    private King king;
+    private Cell[][] board;
 
     @BeforeEach
     public void setup() {
