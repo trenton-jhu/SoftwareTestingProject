@@ -5,19 +5,18 @@ import org.junit.jupiter.api.Test;
 import pieces.King;
 import pieces.Pawn;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CellTest {
+
     private static Cell whiteCell;  // White cell refers to color of cell, not piece it holds
-    private static Pawn whitePawn;
     private static Cell blackCell;  // Same here, color of cell is black
-    private static King blackKing;
 
     @BeforeEach
     public void setup() {
-        whitePawn = new Pawn("WP01", "/White_Pawn.png", 0);
+        Pawn whitePawn = new Pawn("WP01", "/White_Pawn.png", 0);
         whiteCell = new Cell(4, 4, whitePawn);
-        blackKing = new King("BK", "/Black_King.png", 1, 2, 3);
+        King blackKing = new King("BK", "/Black_King.png", 1, 2, 3);
         blackCell = new Cell(2, 3, blackKing);
     }
 
@@ -29,71 +28,71 @@ public class CellTest {
     @Test
     public void testWhiteCellClone() throws CloneNotSupportedException {
         Cell cellClone = new Cell(whiteCell);
-        assertEquals(false, whiteCell.equals(cellClone));
+        assertNotEquals(cellClone, whiteCell);
     }
 
     @Test
     public void testBlackCellClone() throws CloneNotSupportedException {
         Cell cellClone = new Cell(blackCell);
-        assertEquals(false, blackCell.equals(cellClone));
+        assertNotEquals(cellClone, blackCell);
     }
 
     @Test
     public void testNoPieceCellClone() throws CloneNotSupportedException {
         Cell emptyCell = new Cell(5, 5, null);
         Cell cellClone = new Cell(emptyCell);
-        assertEquals(false, emptyCell.equals(cellClone));
+        assertNotEquals(cellClone, emptyCell);
     }
 
     @Test
     public void testRemovePieceNotKing() {
         whiteCell.removePiece();
-        assertEquals(null, whiteCell.getpiece());
+        assertNull(whiteCell.getpiece());
     }
 
     @Test
     public void testRemovePieceKing() {
         blackCell.removePiece();
-        assertEquals(null, blackCell.getpiece());
+        assertNull(blackCell.getpiece());
     }
 
     @Test
     public void testSelect() {
         whiteCell.select();
-        assertEquals(true, whiteCell.isselected());
+        assertTrue(whiteCell.isselected());
     }
 
     @Test
     public void testDeselect() {
         whiteCell.select();
         whiteCell.deselect();
-        assertEquals(false, whiteCell.isselected());
+        assertFalse(whiteCell.isselected());
     }
 
     @Test
     public void testSetPossibleDestination() {
         whiteCell.setpossibledestination();
-        assertEquals(true, whiteCell.ispossibledestination());
+        assertTrue(whiteCell.ispossibledestination());
     }
 
     @Test
     public void testRemovePossibleDestination() {
         whiteCell.setpossibledestination();
         whiteCell.removepossibledestination();
-        assertEquals(false, whiteCell.ispossibledestination());
+        assertFalse(whiteCell.ispossibledestination());
     }
 
     @Test
     public void testBlackCellSetCheck() {
         blackCell.setcheck();
-        assertEquals(true, blackCell.ischeck());
+        assertTrue(blackCell.ischeck());
     }
 
     @Test
     public void testBlackCellRemoveCheck() {
         blackCell.setcheck();
         blackCell.removecheck();
-        assertEquals(false, blackCell.ischeck());
+        assertFalse(blackCell.ischeck());
     }
 
     @Test
@@ -101,6 +100,6 @@ public class CellTest {
         // whiteCell does not contain a King, but code does not check for this
         whiteCell.setcheck();
         whiteCell.removecheck();
-        assertEquals(false, whiteCell.ischeck());
+        assertFalse(whiteCell.ischeck());
     }
 }
