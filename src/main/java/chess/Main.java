@@ -412,7 +412,7 @@ public class Main extends JFrame implements MouseListener
     }
     
     //A Function to filter the possible moves when the king of the current player is under Check 
-    private ArrayList<Cell> incheckfilter (ArrayList<Cell> destlist, Cell fromcell, int color)
+    public ArrayList<Cell> incheckfilter (ArrayList<Cell> destlist, Cell fromcell, int color)
     {
     	ArrayList<Cell> newlist = new ArrayList<Cell>();
     	Cell newboardstate[][] = new Cell[8][8];

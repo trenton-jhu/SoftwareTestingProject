@@ -10,10 +10,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Black-box testing for chess end-game logic
- * Test cases are written based on comments documented in Main.java in Black-box manner.
+ * Black-box testing for chess end-game logic implemented by methods in Main.java
+ * Also include test for game initialization, including board setup
  *
- * Chess resource: https://www.chessgames.com/perl/chesscollection?cid=1022048
+ * Test cases are written based on comments documented in Main.java in Black-box manner for the following methods:
+ * - willkingbeindanger()
+ * - filterdestination()
+ * - checkmate()
  */
 public class MainTest {
 
@@ -57,6 +60,11 @@ public class MainTest {
         }
     }
 
+    /**
+     * Black-box test cases for willkingbeindanger()
+     * Use equivalence partitioning on output domain: True / False
+     * Use error guessing to include test cases like discovered check
+     */
     @Test
     public void testWillKingBeInDangerFalse() {
         assertFalse(main.willkingbeindanger(main.boardState[6][2], main.boardState[6][3]));
@@ -81,6 +89,10 @@ public class MainTest {
         assertTrue(main.willkingbeindanger(board[7][4], board[5][3]));
     }
 
+    /**
+     * Black-box test cases for filterdestination()
+     * Use equivalence partitioning on output domain: empty array, singleton array, array with many elements
+     */
     @Test
     public void testFilterDestination() {
         ArrayList<Cell> moves = new ArrayList<>(List.of(
@@ -108,7 +120,22 @@ public class MainTest {
     }
 
     @Test
-    public void testFilterDestinationMovesByKing() {
+    public void testFilterDestinationOneMove() {
+        Main.wk = new King("WK","/White_King.png", 0, 7, 6);
+        board[7][6].setPiece(Main.wk);
+        board[6][5].setPiece(new Bishop("WB01","/White_Bishop.png",0));
+        board[5][4].setPiece(new Bishop("BB01","/Black_Bishop.png",1));
+        main.boardState = board;
+        ArrayList<Cell> moves = new ArrayList<>(List.of(
+                board[5][4],
+                board[5][6],
+                board[7][4]
+        ));
+        assertEquals(new ArrayList<>(List.of(board[5][4])), main.filterdestination(moves, board[6][5]));
+    }
+
+    @Test
+    public void testFilterDestinationManyMoves() {
         Main.wk = new King("WK","/White_King.png", 0, 7, 6);
         board[7][6].setPiece(Main.wk);
         board[6][3].setPiece(new Rook("BR01","/Black_Rook.png",1));
@@ -127,6 +154,12 @@ public class MainTest {
         assertEquals(expected, main.filterdestination(moves, board[7][6]));
     }
 
+    /**
+     * Black-box test cases for checkmate()
+     * Use equivalence partitioning on output domain: True / False
+     * Use error guessing to add test cases for different checkmates
+     * Reference: https://www.chessgames.com/perl/chesscollection?cid=1022048
+     */
     @Test
     public void testCheckMateFalse() {
         assertFalse(main.checkmate(0));
