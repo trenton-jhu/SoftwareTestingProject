@@ -63,10 +63,10 @@ public class PlayerTest {
     }
 
     // Fault: Division by zero error when calculating Win Percent on newly instantiated player.
-//    @Test
-//    public void testPlayerInitialWinPercent() {
-//        assertEquals(p.winpercent(), Integer.valueOf(0));
-//    }
+    // @Test
+    public void testPlayerInitialWinPercent() {
+        assertEquals(player.winpercent(), Integer.valueOf(0));
+    }
 
     @Test
     public void testPlayerWinFiftyPercent() {
@@ -79,6 +79,19 @@ public class PlayerTest {
         assertEquals(player.gamesplayed(), Integer.valueOf(4));
         assertEquals(player.gameswon(), Integer.valueOf(2));
         assertEquals(player.winpercent(), Integer.valueOf(50));
+    }
+
+    // Fault: Rounding error when calculating Win Percent that does not result in integer percent value.
+    // @Test
+    public void testPlayerWinTwoThirds() {
+        player.updateGamesPlayed();
+        player.updateGamesWon();
+        player.updateGamesPlayed();
+        player.updateGamesPlayed();
+        player.updateGamesWon();
+        assertEquals(player.gamesplayed(), Integer.valueOf(3));
+        assertEquals(player.gameswon(), Integer.valueOf(2));
+        assertEquals(player.winpercent(), Integer.valueOf(67));
     }
 
     @Test

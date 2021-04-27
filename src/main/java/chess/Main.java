@@ -43,10 +43,10 @@ public class Main extends JFrame implements MouseListener
 	private static Bishop wb01,wb02,bb01,bb02;
 	private static Pawn wp[],bp[];
 	private static Queen wq,bq;
-	private static King wk,bk;
+	public static King wk,bk;
 	private Cell c,previous;
 	private int chance=0;
-	private Cell boardState[][];
+	public Cell boardState[][];
 	private ArrayList<Cell> destinationlist = new ArrayList<Cell>();
 	private Player White=null,Black=null;
 	private JPanel board=new JPanel(new GridLayout(8,8));
@@ -77,31 +77,6 @@ public class Main extends JFrame implements MouseListener
 	public static int timeRemaining=60;
 	public static void main(String[] args){
 	
-	//variable initialization
-	wr01=new Rook("WR01","/White_Rook.png",0);
-	wr02=new Rook("WR02","/White_Rook.png",0);
-	br01=new Rook("BR01","/Black_Rook.png",1);
-	br02=new Rook("BR02","/Black_Rook.png",1);
-	wk01=new Knight("WK01","/White_Knight.png",0);
-	wk02=new Knight("WK02","/White_Knight.png",0);
-	bk01=new Knight("BK01","/Black_Knight.png",1);
-	bk02=new Knight("BK02","/Black_Knight.png",1);
-	wb01=new Bishop("WB01","/White_Bishop.png",0);
-	wb02=new Bishop("WB02","/White_Bishop.png",0);
-	bb01=new Bishop("BB01","/Black_Bishop.png",1);
-	bb02=new Bishop("BB02","/Black_Bishop.png",1);
-	wq=new Queen("WQ","/White_Queen.png",0);
-	bq=new Queen("BQ","/Black_Queen.png",1);
-	wk=new King("WK","/White_King.png",0,7,3);
-	bk=new King("BK","/Black_King.png",1,0,3);
-	wp=new Pawn[8];
-	bp=new Pawn[8];
-	for(int i=0;i<8;i++)
-	{
-		wp[i]=new Pawn("WP0"+(i+1),"/White_Pawn.png",0);
-		bp[i]=new Pawn("BP0"+(i+1),"/Black_Pawn.png",1);
-	}
-	
 	//Setting up the board
 	Mainboard = new Main();
 	Mainboard.setVisible(true);	
@@ -111,6 +86,31 @@ public class Main extends JFrame implements MouseListener
 	//Constructor
 	public Main()
     {
+		//variable initialization
+		wr01=new Rook("WR01","/White_Rook.png",0);
+		wr02=new Rook("WR02","/White_Rook.png",0);
+		br01=new Rook("BR01","/Black_Rook.png",1);
+		br02=new Rook("BR02","/Black_Rook.png",1);
+		wk01=new Knight("WK01","/White_Knight.png",0);
+		wk02=new Knight("WK02","/White_Knight.png",0);
+		bk01=new Knight("BK01","/Black_Knight.png",1);
+		bk02=new Knight("BK02","/Black_Knight.png",1);
+		wb01=new Bishop("WB01","/White_Bishop.png",0);
+		wb02=new Bishop("WB02","/White_Bishop.png",0);
+		bb01=new Bishop("BB01","/Black_Bishop.png",1);
+		bb02=new Bishop("BB02","/Black_Bishop.png",1);
+		wq=new Queen("WQ","/White_Queen.png",0);
+		bq=new Queen("BQ","/Black_Queen.png",1);
+		wk=new King("WK","/White_King.png",0,7,3);
+		bk=new King("BK","/Black_King.png",1,0,3);
+		wp=new Pawn[8];
+		bp=new Pawn[8];
+		for(int i=0;i<8;i++)
+		{
+			wp[i]=new Pawn("WP0"+(i+1),"/White_Pawn.png",0);
+			bp[i]=new Pawn("BP0"+(i+1),"/Black_Pawn.png",1);
+		}
+
 		timeRemaining=60;
 		timeSlider = new JSlider();
 		move="White";
@@ -355,7 +355,7 @@ public class Main extends JFrame implements MouseListener
     
     
   //Function to check if the king will be in danger if the given move is made
-    private boolean willkingbeindanger(Cell fromcell,Cell tocell)
+    public boolean willkingbeindanger(Cell fromcell,Cell tocell)
     {
     	Cell newboardstate[][] = new Cell[8][8];
     	for(int i=0;i<8;i++)
@@ -379,7 +379,7 @@ public class Main extends JFrame implements MouseListener
     }
     
     //A function to eliminate the possible moves that will put the King in danger
-    private ArrayList<Cell> filterdestination (ArrayList<Cell> destlist, Cell fromcell)
+    public ArrayList<Cell> filterdestination (ArrayList<Cell> destlist, Cell fromcell)
     {
     	ArrayList<Cell> newlist = new ArrayList<Cell>();
     	Cell newboardstate[][] = new Cell[8][8];
