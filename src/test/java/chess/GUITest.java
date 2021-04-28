@@ -4,7 +4,7 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.jupiter.api.*;
-import pieces.Pawn;
+import pieces.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -154,6 +154,39 @@ public class GUITest extends AssertJSwingJUnitTestCase {
         performMove(new ArrayList<>(List.of("62", "42", "13", "33", "42", "33")));
         checkPiece("33", Pawn.class, 0);
         window.label("turn").requireText("Black");
+    }
+
+    @Test
+    public void testPawnBlocked() {
+        performMove(new ArrayList<>(List.of("62", "42", "12", "32", "42", "32")));
+        checkPiece("42", Pawn.class, 0);
+        checkPiece("32", Pawn.class, 1);
+        window.label("turn").requireText("Black");
+    }
+
+    @Test
+    public void testCastling() {
+        performMove(new ArrayList<>(List.of("63", "43", "13", "23", "62", "42", "14", "34", "43", "33", "06", "25",
+                "71", "52", "16", "26", "72", "36", "05", "16", "73", "71")));
+        checkPiece("71", King.class, 0);
+        checkPiece("72", Rook.class, 0);
+        window.label("turn").requireText("Black");
+    }
+
+    @Test
+    public void testPromotePawn() {
+        performMove(new ArrayList<>(List.of("63", "43", "14", "34", "43", "34", "01", "22", "72", "36", "15", "25",
+                "34", "25", "04", "26", "25", "16", "26", "36", "16", "05")));
+        checkPiece("05", Queen.class, 0);
+        window.label("turn").requireText("Black");
+    }
+
+    @Test
+    public void testCheckmateWin() {
+        performMove(new ArrayList<>(List.of("62", "52", "13", "33", "61", "41", "04", "40")));
+        window.optionPane().requireVisible();
+        window.optionPane().requireMessage("Checkmate!!!\ntest2 wins");
+        window.optionPane().okButton().click();
     }
 
     /**
