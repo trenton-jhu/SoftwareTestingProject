@@ -99,7 +99,7 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     // Fault: On Mac OS, cannot make new players when there are existing players already
-    @Test
+    // @Test
     public void testStartMakeNewPlayers() {
         window.button("WNewPlayer").click();
         window.optionPane().requireVisible();
@@ -200,9 +200,30 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     // Fault: game does not check for stalemate
-    // @Test
+    // https://www.chess.com/forum/view/more-puzzles/stalemate-in-10-moves
+    //@Test
     public void testStalemate() {
+        performMove(new ArrayList<>(List.of("63", "53", "17", "37", "74", "30", "07", "27", "30", "37", "10", "30",
+                "37", "15", "27", "20", "60", "40", "12", "22", "15", "14", "03", "12", "14", "16", "04", "54", "16",
+                "06", "54", "10", "06", "05", "12", "21", "05", "23")));
+        window.optionPane().requireVisible();   // Test will time out waiting for option pane to appear
+    }
 
+    // Fault: game does not allow draws by threefold repetition (player should have option to call draw)
+    // https://en.wikipedia.org/wiki/Threefold_repetition
+    //@Test
+    public void testRepetitionDraw() {
+        performMove(new ArrayList<>(List.of("63", "53", "13", "23", "73", "63", "03", "13", "63", "73", "13", "03",
+                "73", "63", "03", "13", "63", "73", "13", "03")));
+        window.optionPane().requireVisible();   // Test will time out waiting for option pane to appear
+    }
+
+    // Fault: en passant special capture not implemented
+    // https://en.wikipedia.org/wiki/En_passant
+    //@Test
+    public void testEnPassant() {
+        performMove(new ArrayList<>(List.of("63", "53", "10", "30", "53", "43", "11", "31", "43", "33", "31", "41", "60", "40", "41", "50")));
+        checkPiece("40", null, 0);
     }
 
     /**
