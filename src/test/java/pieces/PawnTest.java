@@ -2,6 +2,7 @@ package pieces;
 
 import chess.Cell;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -10,10 +11,13 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Testing class for the Pawn piece and its moves.
+ */
 public class PawnTest {
-    private static Pawn whitePawn;
-    private static Pawn blackPawn;
-    private static Cell[][] board;
+    private Pawn whitePawn;
+    private Pawn blackPawn;
+    private Cell[][] board;
 
     @BeforeEach
     public void setup() {
@@ -27,7 +31,9 @@ public class PawnTest {
         }
     }
 
-    // Added after mutation analysis
+    /**
+     * [MUTATION] Test to verify Pawn constructor sets fields appropriately. Added after mutation analysis.
+     */
     @Test
     public void testPawnConstructor() {
         assertEquals(whitePawn.getId(), "WP01");
@@ -35,9 +41,11 @@ public class PawnTest {
         assertEquals(whitePawn.getcolor(), 0);
     }
 
+    /**
+     * [BRANCH] Test E2 white pawn move set on an empty board.
+     */
     @Test
     public void testWhitePawnMoveInitial() {
-        // Test with E2 white pawn
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][4],
                 board[4][4]
@@ -46,9 +54,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test E7 black pawn move set on an empty board.
+     */
     @Test
     public void testBlackPawnMoveInitial() {
-        // Test with E7 black pawn
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[2][4],
                 board[3][4]
@@ -57,9 +67,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test A4 white pawn move set on an empty board.
+     */
     @Test
     public void testWhitePawnMoveAtLeftEdge() {
-        // Test with A4 white pawn
         Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 0));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[3][0]
@@ -67,9 +79,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test A4 black pawn move set on an empty board.
+     */
     @Test
     public void testBlackPawnMoveAtLeftEdge() {
-        // Test with A4 black pawn
         Set<Cell> result = new HashSet<>(blackPawn.move(board, 4, 0));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][0]
@@ -77,9 +91,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test H4 white pawn move set on an empty board.
+     */
     @Test
     public void testWhitePawnMoveAtRightEdge() {
-        // Test with H4 white pawn
         Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 7));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[3][7]
@@ -87,9 +103,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test H4 black pawn move set on an empty board.
+     */
     @Test
     public void testBlackPawnMoveAtRightEdge() {
-        // Test with H4 black pawn
         Set<Cell> result = new HashSet<>(blackPawn.move(board, 4, 7));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][7]
@@ -97,24 +115,30 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test E8 white pawn move set on an empty board.
+     */
     @Test
     public void testWhitePawnMoveAtEnd() {
-        // Test with E8 white pawn
         Set<Cell> result = new HashSet<>(whitePawn.move(board, 0, 4));
         assertEquals(new HashSet<Cell>(), result);
     }
 
-    // BUG FOUND: x = 7 when black pawn reaches end, but code checks for x == 8
-    /*@Test
+    /**
+     * [BRANCH] Test E1 black pawn move set on an empty board.
+     * BUG FOUND: x = 7 when black pawn reaches end, but code checks for x == 8
+     */
+    @Disabled
     public void testBlackPawnMoveAtEnd() {
-        // Test with E1 black pawn
         Set<Cell> result = new HashSet<>(blackPawn.move(board, 7, 4));
         assertEquals(new HashSet<Cell>(), result);
-    }*/
+    }
 
+    /**
+     * [BRANCH] Test E2 white pawn move set with E4 black pawn.
+     */
     @Test
     public void testWhitePawnMoveInitialBlocked() {
-        // Test with E2 white pawn and E4 black pawn
         board[4][4] = new Cell(4, 4, new Pawn("BP02", "/Black_Pawn.png", 1));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][4]
@@ -123,9 +147,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test E7 black pawn move set with E5 black pawn.
+     */
     @Test
     public void testBlackPawnMoveInitialBlocked() {
-        // Test with E7 black pawn and E5 white pawn
         board[3][4] = new Cell(3, 4, new Pawn("WP02", "/White_Pawn.png", 0));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[2][4]
@@ -134,9 +160,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test E4 white pawn move set with E5 black pawn and D5, F5 white pawns.
+     */
     @Test
     public void testWhitePawnMoveBlocked() {
-        // Test with E4 white pawn and E5 black pawn/D5, F5 white pawns
         board[3][4] = new Cell(3, 4, new Pawn("BP02", "/Black_Pawn.png", 1));
         board[3][3] = new Cell(3, 3, new Pawn("WP02", "/White_Pawn.png", 0));
         board[3][5] = new Cell(3, 5, new Pawn("WP03", "/White_Pawn.png", 0));
@@ -144,9 +172,11 @@ public class PawnTest {
         assertEquals(new HashSet<Cell>(), result);
     }
 
+    /**
+     * [BRANCH] Test E5 black pawn move set with E4 white pawn and D4, F4 black pawns.
+     */
     @Test
     public void testBlackPawnMoveBlocked() {
-        // Test with E5 black pawn and E4 white pawn/D4, F4 black pawns
         board[4][4] = new Cell(4, 4, new Pawn("WP02", "/White_Pawn.png", 0));
         board[4][3] = new Cell(4, 3, new Pawn("BP02", "/Black_Pawn.png", 1));
         board[4][5] = new Cell(4, 5, new Pawn("BP03", "/Black_Pawn.png", 1));
@@ -154,9 +184,11 @@ public class PawnTest {
         assertEquals(new HashSet<Cell>(), result);
     }
 
+    /**
+     * [BRANCH] Test E4 white pawn move set with D5, F5 black pawns.
+     */
     @Test
     public void testWhitePawnMoveWithCaptures() {
-        // Test with E4 white pawn and D5, F5 black pawns
         board[3][3] = new Cell(3, 3, new Pawn("BP02", "/Black_Pawn.png", 1));
         board[3][5] = new Cell(3, 5, new Pawn("BP03", "/Black_Pawn.png", 1));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
@@ -168,6 +200,9 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * [BRANCH] Test E5 black pawn move set with D4, F4 white pawns.
+     */
     @Test
     public void testBlackPawnMoveWithCaptures() {
         // Test with E5 black pawn and D4, F4 white pawns
@@ -182,10 +217,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
-    // Added after mutation analysis
+    /**
+     * [MUTATION] Test E4 white pawn move set with D5 black pawn. Added after mutation analysis.
+     */
     @Test
     public void testWhitePawnMoveSingleLeftCapture() {
-        // Test with E4 white pawn and D5 black pawn
         board[3][3] = new Cell(3, 3, new Pawn("BP02", "/Black_Pawn.png", 1));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[3][4],
@@ -195,7 +231,9 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
-    // Added after mutation analysis
+    /**
+     * [MUTATION] Test E4 white pawn move set with F5 black pawn. Added after mutation analysis.
+     */
     @Test
     public void testWhitePawnMoveSingleRightCapture() {
         // Test with E4 white pawn and F5 black pawn
@@ -208,10 +246,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
-    // Added after mutation analysis
+    /**
+     * [MUTATION] Test E4 black pawn move set with D3 white pawn. Added after mutation analysis.
+     */
     @Test
     public void testBlackPawnMoveSingleLeftCapture() {
-        // Test with E4 black pawn and D3 white pawn
         board[5][3] = new Cell(5, 3, new Pawn("WP02", "/White_Pawn.png", 0));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][4],
@@ -221,10 +260,11 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
-    // Added after mutation analysis
+    /**
+     * [MUTATION] Test E4 black pawn move set with F3 white pawn. Added after mutation analysis.
+     */
     @Test
     public void testBlackPawnMoveSingleRightCapture() {
-        // Test with E4 black pawn and F3 white pawn
         board[5][5] = new Cell(5, 5, new Pawn("WP02", "/White_Pawn.png", 0));
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[5][4],
@@ -234,7 +274,9 @@ public class PawnTest {
         assertEquals(expected, result);
     }
 
-    // Added after mutation analysis
+    /**
+     * [BRANCH] Test E4 white pawn move set after moving from E3.
+     */
     @Test
     public void testPawnClearPossibleMoves() {
         whitePawn.move(board, 5, 4);
@@ -242,6 +284,23 @@ public class PawnTest {
                 board[3][4]
         ));
         Set<Cell> result = new HashSet<>(whitePawn.move(board, 4, 4));
+        assertEquals(expected, result);
+    }
+
+    /**
+     * [BLACKBOX] Test if D5 white pawn has en passant move when black pawn moves to E5.
+     * https://en.wikipedia.org/wiki/En_passant
+     *
+     * BUG FOUND: En passant special rule not implemented
+     */
+    @Disabled
+    public void testEnPassantSpecialMove() {
+        blackPawn.move(board, 3, 4);
+        Set<Cell> expected = new HashSet<>(Arrays.asList(
+                board[2][3],
+                board[2][4]
+        ));
+        Set<Cell> result = new HashSet<>(whitePawn.move(board, 3, 3));
         assertEquals(expected, result);
     }
 }
