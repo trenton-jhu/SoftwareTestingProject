@@ -184,10 +184,18 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testCheckmateWinFoulsMate() {
+    public void testCheckmateWinFoolsMate() {
         performMove(new ArrayList<>(List.of("62", "52", "13", "33", "61", "41", "04", "40")));
         window.optionPane().requireVisible();
         window.optionPane().requireMessage("Checkmate!!!\nplayer2 wins");
+        window.optionPane().okButton().click();
+    }
+
+    @Test
+    public void testCheckmateWinScholarsMate() {
+        performMove(new ArrayList<>(List.of("63", "43", "13", "33", "74", "30", "06", "25", "72", "45", "01", "22", "30", "12")));
+        window.optionPane().requireVisible();
+        window.optionPane().requireMessage("Checkmate!!!\nplayer1 wins");
         window.optionPane().okButton().click();
     }
 
