@@ -128,7 +128,7 @@ public class PawnTest {
      * [BRANCH] Test E1 black pawn move set on an empty board.
      * BUG FOUND: x = 7 when black pawn reaches end, but code checks for x == 8
      */
-    @Disabled
+    // @Test
     public void testBlackPawnMoveAtEnd() {
         Set<Cell> result = new HashSet<>(blackPawn.move(board, 7, 4));
         assertEquals(new HashSet<Cell>(), result);
@@ -293,7 +293,7 @@ public class PawnTest {
      *
      * BUG FOUND: En passant special rule not implemented
      */
-    @Disabled
+    // @Test
     public void testEnPassantSpecialMove() {
         blackPawn.move(board, 3, 4);
         Set<Cell> expected = new HashSet<>(Arrays.asList(

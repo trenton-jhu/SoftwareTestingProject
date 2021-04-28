@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class KnightTest {
@@ -145,7 +144,7 @@ public class KnightTest {
     }
 
     /* False failure: Move returns results for invalid board position */
-    @Disabled
+    // @Test
     public void testKnightTestInvalidMove() {
         Set<Cell> result = new HashSet<>(knight.move(board, -1, -1));
         assertEquals(new HashSet<Cell>(), result);
