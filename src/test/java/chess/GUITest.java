@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.swing.core.matcher.JButtonMatcher.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * GUI tests are implemented using AssertJ Swing which simulates user action and input on the
@@ -100,32 +99,6 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testStartMakeNewPlayers() {
-        window.button("WNewPlayer").click();
-        window.optionPane().requireVisible();
-        window.optionPane().textBox().requireEditable();
-        window.optionPane().textBox().enterText("test1");
-        window.optionPane().okButton().click();
-
-        window.button("BNewPlayer").click();
-        window.optionPane().requireVisible();
-        window.optionPane().textBox().requireEditable();
-        window.optionPane().textBox().enterText("test1");
-        window.optionPane().okButton().click();
-        window.optionPane().requireMessage("Player exists");
-        window.optionPane().okButton().click();
-
-        window.button("BNewPlayer").click();
-        window.optionPane().requireVisible();
-        window.optionPane().textBox().requireEditable();
-        window.optionPane().textBox().enterText("test2");
-        window.optionPane().okButton().click();
-
-        window.button(withText("Start")).click();
-        window.panel("chessboard").requireVisible();
-    }
-
-    @Test
     public void testStartUseExistingPlayers() {
         window.button("wselect").click();
         window.button("bselect").click();
@@ -161,7 +134,7 @@ public class GUITest extends AssertJSwingJUnitTestCase {
         performMove(new ArrayList<>(List.of("62", "42", "12", "32", "42", "32")));
         checkPiece("42", Pawn.class, 0);
         checkPiece("32", Pawn.class, 1);
-        window.label("turn").requireText("Black");
+        window.label("turn").requireText("White");
     }
 
     @Test
@@ -182,10 +155,10 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testCheckmateWin() {
+    public void testCheckmateWinFoulsMate() {
         performMove(new ArrayList<>(List.of("62", "52", "13", "33", "61", "41", "04", "40")));
         window.optionPane().requireVisible();
-        window.optionPane().requireMessage("Checkmate!!!\ntest2 wins");
+        window.optionPane().requireMessage("Checkmate!!!\nplayer2 wins");
         window.optionPane().okButton().click();
     }
 
@@ -204,13 +177,20 @@ public class GUITest extends AssertJSwingJUnitTestCase {
         }
     }
 
+    /**
+     * Helper to check the content of a cell in the current chessboard
+     * @param cell current cell represented by x y coordinate in string format
+     * @param pieceType class of the expected piece type
+     * @param color color of the expected piece
+     */
     private void checkPiece(String cell, Class<?> pieceType, int color) {
         Cell c = window.panel("chessboard").panel(cell).targetCastedTo(Cell.class);
         if (pieceType == null) {
             assertNull(c.getpiece());
         } else {
-            assertEquals(c.getpiece().getClass(), pieceType);
-            assertEquals(c.getpiece().getcolor(), color);
+            assertNotNull(c.getpiece());
+            assertEquals(pieceType, c.getpiece().getClass());
+            assertEquals(color, c.getpiece().getcolor());
         }
     }
 }
