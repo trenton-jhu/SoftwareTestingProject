@@ -39,9 +39,15 @@ dependencies {
     testImplementation "org.powermock:powermock-classloading-xstream:1.6.6"
 }
 
+def jacocoExclude = ["**/chess/GUITest.class", "**/chess/PlayerTest.class", "**/chess/TimeTest.class"]
 jacocoTestReport {
     dependsOn test
     reports {
         html.enabled true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExclude)
+        }))
     }
 }
