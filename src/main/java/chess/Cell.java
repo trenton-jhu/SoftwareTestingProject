@@ -24,6 +24,7 @@ public class Cell extends JPanel implements Cloneable{
 	{		
 		this.x=x;
 		this.y=y;
+		this.setName(x + "" + y);
 		
 		setLayout(new BorderLayout());
 	

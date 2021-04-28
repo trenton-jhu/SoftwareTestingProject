@@ -2,52 +2,77 @@ package chess;
 
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
-import org.assertj.swing.fixture.JSliderFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.jupiter.api.*;
+import pieces.Pawn;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.assertj.swing.core.matcher.JButtonMatcher.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * GUI tests are implemented using AssertJ Swing which simulates user action and input on the
+ * actual interface.
+ * Do not move the mouse or use the keyboard while running the tests, as this may lead to unexpected
+ * test results
+ * Running all the tests may take a long time, you can run certain test individually for convenience
+ *
+ * There may be an Illegal Reflective Access Operation warning, this is due to AssertJ not quite
+ * compatible with Java SDK 11, but this warning can be ignored.
+ * Switching to Java SDK 8 will eliminate the warnings.
+ */
 public class GUITest extends AssertJSwingJUnitTestCase {
-    private static Robot robot;
+
+    private static final String REALFILE = System.getProperty("user.dir")+ File.separator + "chessgamedata.dat";
+    private static final String TESTFILE = System.getProperty("user.dir")+ File.separator + "test.dat";
+
     private FrameFixture window;
 
+    /**
+     * To ensure we do not interfere with stored data when doing GUI testing, we make a copy of
+     * the current real data into a new temporary test file before running the tests.
+     * When all the tests are completed, we then transfer the real data back to the original file.
+     *
+     * Note: if tests are terminated before running to completion, the real data will be stored in
+     * test.dat and so needs to be copied over to chessgamedata.dat.
+     */
     @BeforeAll
-    public static void deletePlayerData() throws AWTException {
-        // Need fresh chessgamedata.dat in order to test new players
-        File f = new File("chessgamedata.dat");
-        if (f.delete()) {
-            System.out.println("Deleted " + f.getName());
+    public static void setup() throws Exception {
+        File inFile = new File(REALFILE);
+        File outFile = new File(TESTFILE);
+        if (outFile.exists()) {
+            outFile.delete();
         }
-        robot = new Robot();
+        if (inFile.exists()) {
+            Files.copy(inFile.toPath(), outFile.toPath());
+            inFile.delete();
+        }
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(inFile))) {
+            os.writeObject(new Player("player1"));
+            os.writeObject(new Player("player2"));
+        }
     }
 
-    /**
-     * Simulate input of an entire text string (get rid of this if you figure out how to access text box in JPanel)
-     *
-     * @param robot the Robot object
-     * @param keys  the text string to type
-     */
-    public void sendKeys(Robot robot, String keys) {
-        for (char c : keys.toCharArray()) {
-            int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
-            if (Character.isUpperCase(c)) {
-                robot.keyPress(KeyEvent.VK_SHIFT);
-                robot.delay(25);
-            }
-            robot.keyPress(keyCode);
-            robot.delay(25);
-            robot.keyRelease(keyCode);
-            robot.delay(25);
-            if (Character.isUpperCase(c)) {
-                robot.keyRelease(KeyEvent.VK_SHIFT);
-                robot.delay(25);
-            }
+    @AfterAll
+    public static void clean() throws IOException {
+        File inFile = new File(TESTFILE);
+        File outFile = new File(REALFILE);
+        if (outFile.exists()) {
+            outFile.delete();
+        }
+        if (inFile.exists()) {
+            Files.copy(inFile.toPath(), outFile.toPath());
+            inFile.delete();
+        } else {
+            outFile.delete();
         }
     }
 
@@ -58,62 +83,101 @@ public class GUITest extends AssertJSwingJUnitTestCase {
             return Main.Mainboard;
         });
         window = new FrameFixture(frame);
-    }
 
-    /**
-     * Test new player setup. This test is ordered first so that subsequent tests can use the players created.
-     */
-    @Test
-    @Order(1)
-    public void newPlayerGameStart() {
-        JButtonFixture whiteNewPlayer = window.button("whiteNewPlayer");
-        whiteNewPlayer.click();
-        sendKeys(robot, "WhiteTest\n");
-        assertEquals(" WhiteTest", window.label("newPlayerName0").text());
-        assertEquals(" 0", window.label("newPlayerGamesPlayed0").text());
-        assertEquals(" 0", window.label("newPlayerGamesWon0").text());
-
-        JButtonFixture blackNewPlayer = window.button("blackNewPlayer");
-        blackNewPlayer.click();
-        sendKeys(robot, "BlackTest\n");
-        assertEquals(" BlackTest", window.label("newPlayerName1").text());
-        assertEquals(" 0", window.label("newPlayerGamesPlayed1").text());
-        assertEquals(" 0", window.label("newPlayerGamesWon1").text());
-
-        JSliderFixture timeSlider = window.slider("timeSlider");
-        timeSlider.slideTo(5);
-
-        JButtonFixture startGame = window.button("startGame");
-        startGame.click();
-    }
-
-    /**
-     * Test existing player setup. This test is ordered second so that games played/won is known.
-     */
-    @Test
-    @Order(2)
-    public void existingPlayerGameStart() {
-        JButtonFixture whiteSelectPlayer = window.button("whiteSelectPlayer");
-        whiteSelectPlayer.click();
-        assertEquals(" WhiteTest", window.label("playerName0").text());
-        assertEquals(" 1", window.label("playerGamesPlayed0").text());
-        assertEquals(" 0", window.label("playerGamesWon0").text());
-
-        JButtonFixture blackSelectPlayer = window.button("blackSelectPlayer");
-        blackSelectPlayer.click();
-        assertEquals(" BlackTest", window.label("playerName1").text());
-        assertEquals(" 1", window.label("playerGamesPlayed1").text());
-        assertEquals(" 0", window.label("playerGamesWon1").text());
-
-        JSliderFixture timeSlider = window.slider("timeSlider");
-        timeSlider.slideTo(5);
-
-        JButtonFixture startGame = window.button("startGame");
-        startGame.click();
     }
 
     @AfterEach
-    public void onFinish() {
+    public void onCleanUp() {
         window.cleanUp();
+    }
+
+    @Test
+    public void testStartWithoutSelectingPlayer() {
+        window.button(withText("Start")).click();
+        window.optionPane().requireVisible();
+        window.optionPane().requireMessage("Fill in the details");
+        window.optionPane().okButton().click();
+    }
+
+    @Test
+    public void testStartMakeNewPlayers() {
+        window.button("WNewPlayer").click();
+        window.optionPane().requireVisible();
+        window.optionPane().textBox().requireEditable();
+        window.optionPane().textBox().enterText("test1");
+        window.optionPane().okButton().click();
+
+        window.button("BNewPlayer").click();
+        window.optionPane().requireVisible();
+        window.optionPane().textBox().requireEditable();
+        window.optionPane().textBox().enterText("test1");
+        window.optionPane().okButton().click();
+        window.optionPane().requireMessage("Player exists");
+        window.optionPane().okButton().click();
+
+        window.button("BNewPlayer").click();
+        window.optionPane().requireVisible();
+        window.optionPane().textBox().requireEditable();
+        window.optionPane().textBox().enterText("test2");
+        window.optionPane().okButton().click();
+
+        window.button(withText("Start")).click();
+        window.panel("chessboard").requireVisible();
+    }
+
+    @Test
+    public void testStartUseExistingPlayers() {
+        window.button("wselect").click();
+        window.button("bselect").click();
+        window.button(withText("Start")).click();
+        window.panel("chessboard").requireVisible();
+    }
+
+    @Test
+    public void testInitialMoveByWhitePawn() {
+        performMove(new ArrayList<>(List.of("62", "42")));
+        checkPiece("42", Pawn.class, 0);
+        checkPiece("62", null, 0);
+        window.label("turn").requireText("Black");
+    }
+
+    @Test
+    public void testInvalidInitialMoveByBlackPawn() {
+        performMove(new ArrayList<>(List.of("12", "22")));
+        checkPiece("22", null, 1);
+        checkPiece("12", Pawn.class, 1);
+        window.label("turn").requireText("White");
+    }
+
+    @Test
+    public void testPawnCapture() {
+        performMove(new ArrayList<>(List.of("62", "42", "13", "33", "42", "33")));
+        checkPiece("33", Pawn.class, 0);
+        window.label("turn").requireText("Black");
+    }
+
+    /**
+     * Helper to start the game and then perform a sequence of chessboard moves on the GUI
+     * acting as both players
+     * @param cells list of cells to click on the GUI, each cell is represented by
+     *              x y coordinate in string format. For example, upper-left cell is "00"
+     */
+    private void performMove(ArrayList<String> cells) {
+        window.button("wselect").click();
+        window.button("bselect").click();
+        window.button(withText("Start")).click();
+        for (String s : cells) {
+            window.panel("chessboard").panel(s).click();
+        }
+    }
+
+    private void checkPiece(String cell, Class<?> pieceType, int color) {
+        Cell c = window.panel("chessboard").panel(cell).targetCastedTo(Cell.class);
+        if (pieceType == null) {
+            assertNull(c.getpiece());
+        } else {
+            assertEquals(c.getpiece().getClass(), pieceType);
+            assertEquals(c.getpiece().getcolor(), color);
+        }
     }
 }

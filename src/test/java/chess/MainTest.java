@@ -157,7 +157,7 @@ public class MainTest {
     /**
      * Black-box test cases for checkmate()
      * Use equivalence partitioning on output domain: True / False
-     * Use error guessing to add test cases for different checkmates
+     * Use error guessing to add test case for stalemate situation
      * Reference: https://www.chessgames.com/perl/chesscollection?cid=1022048
      */
     @Test

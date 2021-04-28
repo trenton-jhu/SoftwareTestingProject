@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -114,12 +113,12 @@ public class Main extends JFrame implements MouseListener
 
 		timeRemaining=60;
 		timeSlider = new JSlider();
-		timeSlider.setName("timeSlider");
 		move="White";
 		wname=null;
 		bname=null;
 		winner=null;
 		board=new JPanel(new GridLayout(8,8));
+		board.setName("chessboard");
 		wdetails=new JPanel(new GridLayout(3,3));
 		bdetails=new JPanel(new GridLayout(3,3));
 		bcombopanel=new JPanel();
@@ -169,7 +168,7 @@ public class Main extends JFrame implements MouseListener
 		WhitePlayer=new JPanel();
 		WhitePlayer.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.RED));
 		WhitePlayer.setLayout(new BorderLayout());
-
+		
 		BlackPlayer=new JPanel();
 		BlackPlayer.setBorder(BorderFactory.createTitledBorder(null, "Black Player", TitledBorder.TOP,TitledBorder.CENTER, new Font("times new roman",Font.BOLD,18), Color.BLUE));
 	    BlackPlayer.setLayout(new BorderLayout());
@@ -183,15 +182,15 @@ public class Main extends JFrame implements MouseListener
 		wcombopanel.setLayout(new FlowLayout());
 		bcombopanel.setLayout(new FlowLayout());
 		wselect=new JButton("Select");
-		wselect.setName("whiteSelectPlayer");
 		bselect=new JButton("Select");
-		bselect.setName("blackSelectPlayer");
+		wselect.setName("wselect");
+		bselect.setName("bselect");
 		wselect.addActionListener(new SelectHandler(0));
 		bselect.addActionListener(new SelectHandler(1));
 		WNewPlayer=new JButton("New Player");
-		WNewPlayer.setName("whiteNewPlayer");
+		WNewPlayer.setName("WNewPlayer");
 		BNewPlayer=new JButton("New Player");
-		BNewPlayer.setName("blackNewPlayer");
+		BNewPlayer.setName("BNewPlayer");
 		WNewPlayer.addActionListener(new Handler(0));
 		BNewPlayer.addActionListener(new Handler(1));
 		wcombopanel.add(wscroll);
@@ -212,7 +211,6 @@ public class Main extends JFrame implements MouseListener
 		BlackPlayer.add(blackstats,BorderLayout.WEST);
 		controlPanel.add(WhitePlayer);
 		controlPanel.add(BlackPlayer);
-		
 		
 		//Defining all the Cells
 		boardState=new Cell[8][8];
@@ -265,7 +263,6 @@ public class Main extends JFrame implements MouseListener
 		showPlayer.add(timeSlider);
 		JLabel setTime=new JLabel("Set Timer(in mins):"); 
 		start=new JButton("Start");
-		start.setName("startGame");
 		start.setBackground(Color.black);
 		start.setForeground(Color.white);
 	    start.addActionListener(new START());
@@ -669,6 +666,7 @@ public class Main extends JFrame implements MouseListener
 		mov.setForeground(Color.red);
 		showPlayer.add(mov);
 		CHNC=new JLabel(move);
+		CHNC.setName("turn");
 		CHNC.setFont(new Font("Comic Sans MS",Font.BOLD,20));
 		CHNC.setForeground(Color.blue);
 		showPlayer.add(CHNC);
@@ -742,18 +740,9 @@ public class Main extends JFrame implements MouseListener
 				ojc.removeAllItems();
 				for (Player s:opl)
 					ojc.addItem(s.name());
-
-				JLabel playerName = new JLabel(" "+tempPlayer.name());
-				playerName.setName("playerName"+color);
-				det.add(playerName);
-
-				JLabel playerGamesPlayed = new JLabel(" "+tempPlayer.gamesplayed());
-				playerGamesPlayed.setName("playerGamesPlayed"+color);
-				det.add(playerGamesPlayed);
-
-				JLabel playerGamesWon = new JLabel(" "+tempPlayer.gameswon());
-				playerGamesWon.setName("playerGamesWon"+color);
-				det.add(playerGamesWon);
+				det.add(new JLabel(" "+tempPlayer.name()));
+				det.add(new JLabel(" "+tempPlayer.gamesplayed()));
+				det.add(new JLabel(" "+tempPlayer.gameswon()));
 				
 				PL.revalidate();
 				PL.repaint();
@@ -804,19 +793,9 @@ public class Main extends JFrame implements MouseListener
 				else
 					return;
 				det.removeAll();
-
-				JLabel newPlayerName = new JLabel(" "+n);
-				newPlayerName.setName("newPlayerName"+color);
-				det.add(newPlayerName);
-
-				JLabel newPlayerGamesPlayed = new JLabel(" 0");
-				newPlayerGamesPlayed.setName("newPlayerGamesPlayed"+color);
-				det.add(newPlayerGamesPlayed);
-
-				JLabel newPlayerGamesWon = new JLabel(" 0");
-				newPlayerGamesWon.setName("newPlayerGamesWon"+color);
-				det.add(newPlayerGamesWon);
-
+				det.add(new JLabel(" "+n));
+				det.add(new JLabel(" 0"));
+				det.add(new JLabel(" 0"));
 				j.revalidate();
 				j.repaint();
 				j.add(det);
