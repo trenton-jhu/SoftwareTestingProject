@@ -161,7 +161,7 @@ public class GUITest extends AssertJSwingJUnitTestCase {
         performMove(new ArrayList<>(List.of("62", "42", "12", "32", "42", "32")));
         checkPiece("42", Pawn.class, 0);
         checkPiece("32", Pawn.class, 1);
-        window.label("turn").requireText("Black");
+        window.label("turn").requireText("White");
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     public void testCheckmateWin() {
         performMove(new ArrayList<>(List.of("62", "52", "13", "33", "61", "41", "04", "40")));
         window.optionPane().requireVisible();
-        window.optionPane().requireMessage("Checkmate!!!\ntest2 wins");
+        window.optionPane().requireMessage("Checkmate!!!\nplayer2 wins");
         window.optionPane().okButton().click();
     }
 
