@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing class for the Pawn piece and its moves.
@@ -38,6 +38,21 @@ public class PawnTest {
         assertEquals(whitePawn.getId(), "WP01");
         assertEquals(whitePawn.getPath(), "/White_Pawn.png");
         assertEquals(whitePawn.getcolor(), 0);
+    }
+
+    /**
+     * [MUTATION] Test getCopy() of Pawn. Added after mutation analysis. This should apply to all piece types
+     */
+    @Test
+    public void testPawnGetCopy() throws CloneNotSupportedException {
+        Piece wp = whitePawn.getcopy();
+        Piece bp = blackPawn.getcopy();
+        assertNotNull(wp);
+        assertNotNull(bp);
+        assertEquals(Pawn.class, wp.getClass());
+        assertEquals(0, wp.getcolor());
+        assertEquals(Pawn.class, bp.getClass());
+        assertEquals(1, bp.getcolor());
     }
 
     /**

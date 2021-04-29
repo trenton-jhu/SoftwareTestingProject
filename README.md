@@ -84,3 +84,5 @@ Faults Identified:
 - Pawn promotion to Queen when reaching the opposite end of board is not implemented
 - Game does not detect and show message when ends in stalemate
 - Game does not provide option for player to claim draw after a threefold repetition
+- Cannot make new players when there are already two players that exist (Only for running on Mac OS machines, not sure if
+  this an intended feature or a fault)
