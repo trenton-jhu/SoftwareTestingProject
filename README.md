@@ -12,11 +12,14 @@ tookit for Java.
 
 ## Testing Methods and Frameworks
 To thoroughly test our SUT, we make use of the following testing techniques and testing tools / frameworks:
-- Black-box unit testing (JUnit)
-- White-box unit testing (JUnit)
+- Black-box unit testing (JUnit5)
+- White-box unit testing (JUnit5)
 - Mutation testing (PITest)
 - Mock testing (PowerMockito, Mockito)
 - GUI testing (AssertJ Swing)
+
+All the tests are located in the `test/java/` directory. The tests that result in failures are commented out for more convenient
+running of successful tests.
 
 
 ## Black-Box Testing
@@ -40,12 +43,14 @@ How to run:
 - Run `gradlew jacocoTestReport` to generate jacoco coverage report
 
 Test Results:
-- 100% branch coverage for all piece classes except for `Pawn.java`, which cannot be achieved due to a fault.
+- 100% branch coverage for all piece classes except for `Pawn.java` (97%), which cannot achieve full coverage due to a fault.
   See jacoco test reports for details.
-- Note that jacoco measures conditional coverage, which is actually stronger coverage criterion than branch coverage.
+- Note that jacoco measures conditional coverage, which is actually a stronger coverage criterion than branch coverage.
 
 Faults Identified:
-- `x = 7` when black pawn reaches end, but code checks for `x == 8`. This does not lead to failure because it will have no effect on the GUI.
+- `x = 7` when black pawn reaches end, but code checks for `x == 8`. This does not lead to failure because it will have no effect on the GUI. However, this fault leads to a branch of unreachable code, and so full branch coverage and mutation coverage cannot be achieved because of this.
+  
+- `move()` methods for all pieces return incorrect set of moves for pieces when starting position is invalid (for example `x = -1, y = -1`). Does not lead to failure because there is no way to for these methods to be invoked with invalid input.
 - Pawn En Passant special move is not implemented.
 
 ## Mutation Testing
@@ -55,10 +60,14 @@ How to run:
 - Run `gradlew pitest`
 
 Test Results:
-- 100% mutation coverage for all piece classes except for `Pawn.java`, which cannot be achieved due to same fault mentioned earlier. See PITest report for details
+- 100% mutation coverage for all piece classes except for `Pawn.java` (98%), which cannot be achieved due to same fault mentioned earlier. See PITest report for details
 
 ## Mock Testing
-We use mock testing for `Player.java` and `Time.java`. This is because `Player.java` is mainly used for writing player data (player name, number of games won, number of games played) to a data file. Thus, in order to test this program without modifying actual player data that might be stored, we use mock testing. `Time.java` deals with counting down a timer for switching turns in the chess game. We used mock testing for this as well because the program relies on certain GUI components, which we can mock.
+We use mock testing for `Player.java` and `Time.java`. This is because `Player.java` is mainly used for writing player data (player name, number of games won, number of games played) to a data file. Thus, in order to test this program without modifying actual player data that might be stored, we use mock testing. Mock testing also makes sense because reading and writing data functionalities are better suited for behavior-based testing. `Time.java` deals with counting down a timer for switching turns in the chess game. We used mock testing for this as well because the program relies on certain GUI components. Since we do really need to initialize the GUI for just testing the timer functionalities, we can use mock for the GUI components.
+
+How to run:
+- Run all tests in `PlayerTest.java` and `TimeTest.java`.
+- Tests in `PlayerTest.java` uses JUnit4 with PowerMockito and needs to be run with Intellij test runner instead of Gradle test runner. To ensure Intellij test runner is used, open Settings>Build, Execution, Deployment>Build Tools>Gradle, and make sure `Intellij IDEA` is selected for `Run tests using`
 
 Test Results:
 - Covered all interactions between `Player.java` and its collaborators, including File, and different Input and Output streams.
@@ -83,6 +92,17 @@ Faults Identified:
 - Castling is not implemented
 - Pawn promotion to Queen when reaching the opposite end of board is not implemented
 - Game does not detect and show message when ends in stalemate
-- Game does not provide option for player to claim draw after a threefold repetition
+- Game does not provide option for a player to claim draw after a threefold repetition
 - Cannot make new players when there are already two players that exist (Only for running on Mac OS machines, not sure if
-  this an intended feature or a fault)
+  this is an intended feature or a fault)
+  
+## Discussion
+- Important for software development to make program more testable:
+  - Breakdown classes that are too large and contains too many methods, logic. `Main.java` tries to encompass too many 
+  tasks including GUI setup, game initialization, game logic, etc.
+  - Should use dependency injection instead of instantiation for classes with high couplings. For example `Player.java` makes use of many different input and output streams and file handlers and so using dependency injection would be much easier to test using mock.
+    
+- Some faults discovered for certain methods do not necessarily lead to failures because their consumers interact with them in a specific way to avoid it. However, for more reliable software that is robust and flexible to extension and further development, these faults should still be fixed.
+- Cross-platform compatibility of program: important to maintain consistency for software across different platforms.
+- Good to mention in design docs or software specs what features are not implemented or what are future development steps.
+- Need to have many different software testing techniques to achieve more thorough and comprehensive testing of a piece of software. Different testing methods may lead to different type of faults being revealed.

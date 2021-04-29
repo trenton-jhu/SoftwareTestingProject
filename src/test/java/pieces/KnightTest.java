@@ -3,6 +3,7 @@ package pieces;
 import chess.Cell;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -147,7 +148,7 @@ public class KnightTest {
     // @Test
     public void testKnightTestInvalidMove() {
         Set<Cell> result = new HashSet<>(knight.move(board, -1, -1));
-        assertEquals(new HashSet<Cell>(), result);
+        assertTrue(result.isEmpty());
         // Should return empty
     }
 }
