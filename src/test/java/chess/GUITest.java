@@ -3,6 +3,7 @@ package chess;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.assertj.swing.timing.Timeout;
 import org.junit.jupiter.api.*;
 import pieces.*;
 
@@ -150,17 +151,35 @@ public class GUITest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testPawnCapture() {
+    public void testMoveCapture() {
         performMove(new ArrayList<>(List.of("62", "42", "13", "33", "42", "33")));
         checkPiece("33", Pawn.class, 0);
         window.label("turn").requireText("Black");
     }
 
     @Test
-    public void testPawnBlocked() {
+    public void testMoveBlocked() {
         performMove(new ArrayList<>(List.of("62", "42", "12", "32", "42", "32")));
         checkPiece("42", Pawn.class, 0);
         checkPiece("32", Pawn.class, 1);
+        window.label("turn").requireText("White");
+    }
+
+    @Test
+    public void testMoveWhenChecked() {
+        performMove(new ArrayList<>(List.of("63", "53", "13", "33", "64", "44", "02", "46", "73", "64")));
+        checkPiece("73", King.class, 0);
+        checkPiece("64", null, 0);
+        window.label("turn").requireText("White");
+    }
+
+    // Fault: move that exposes king to check is allowed
+    // bn @Test
+    public void testMoveExposeToCheck() {
+        performMove(new ArrayList<>(List.of("63", "43", "17", "37", "74", "63", "07", "27", "43", "33", "27", "23",
+                "71", "50", "23", "33", "63", "54")));
+        checkPiece("63", Queen.class, 0);
+        checkPiece("54", null, 0);
         window.label("turn").requireText("White");
     }
 
@@ -172,6 +191,17 @@ public class GUITest extends AssertJSwingJUnitTestCase {
         checkPiece("71", King.class, 0);
         checkPiece("72", Rook.class, 0);
         window.label("turn").requireText("Black");
+    }
+
+    // Fault: Pawn en passant special capture not implemented
+    // https://en.wikipedia.org/wiki/En_passant
+    // @Test
+    public void testEnPassant() {
+        performMove(new ArrayList<>(List.of("63", "53", "10", "30", "53", "43", "11", "31", "43", "33", "31", "41",
+                "60", "40", "41", "50")));
+        checkPiece("50", Pawn.class, 1);
+        checkPiece("40", null, 0);
+        window.label("turn").requireText("White");
     }
 
     // Fault: pawn promotion is not implemented
@@ -193,7 +223,8 @@ public class GUITest extends AssertJSwingJUnitTestCase {
 
     @Test
     public void testCheckmateWinScholarsMate() {
-        performMove(new ArrayList<>(List.of("63", "43", "13", "33", "74", "30", "06", "25", "72", "45", "01", "22", "30", "12")));
+        performMove(new ArrayList<>(List.of("63", "43", "13", "33", "74", "30", "06", "25", "72", "45", "01", "22",
+                "30", "12")));
         window.optionPane().requireVisible();
         window.optionPane().requireMessage("Checkmate!!!\nplayer1 wins");
         window.optionPane().okButton().click();
@@ -201,29 +232,21 @@ public class GUITest extends AssertJSwingJUnitTestCase {
 
     // Fault: game does not check for stalemate
     // https://www.chess.com/forum/view/more-puzzles/stalemate-in-10-moves
-    //@Test
+    // @Test
     public void testStalemate() {
         performMove(new ArrayList<>(List.of("63", "53", "17", "37", "74", "30", "07", "27", "30", "37", "10", "30",
                 "37", "15", "27", "20", "60", "40", "12", "22", "15", "14", "03", "12", "14", "16", "04", "54", "16",
                 "06", "54", "10", "06", "05", "12", "21", "05", "23")));
-        window.optionPane().requireVisible();   // Test will time out waiting for option pane to appear
+        window.optionPane(Timeout.timeout(1000)).requireVisible();
     }
 
     // Fault: game does not allow draws by threefold repetition (player should have option to call draw)
     // https://en.wikipedia.org/wiki/Threefold_repetition
-    //@Test
+    // @Test
     public void testRepetitionDraw() {
         performMove(new ArrayList<>(List.of("63", "53", "13", "23", "73", "63", "03", "13", "63", "73", "13", "03",
                 "73", "63", "03", "13", "63", "73", "13", "03")));
-        window.optionPane().requireVisible();   // Test will time out waiting for option pane to appear
-    }
-
-    // Fault: en passant special capture not implemented
-    // https://en.wikipedia.org/wiki/En_passant
-    //@Test
-    public void testEnPassant() {
-        performMove(new ArrayList<>(List.of("63", "53", "10", "30", "53", "43", "11", "31", "43", "33", "31", "41", "60", "40", "41", "50")));
-        checkPiece("40", null, 0);
+        window.optionPane(Timeout.timeout(1000)).requireVisible();   // Test will time out waiting for option pane to appear
     }
 
     /**

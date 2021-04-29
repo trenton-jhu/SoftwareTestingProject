@@ -125,7 +125,7 @@ public class PawnTest {
 
     /**
      * [BRANCH] Test E1 black pawn move set on an empty board.
-     * BUG FOUND: x = 7 when black pawn reaches end, but code checks for x == 8
+     * Fault: x = 7 when black pawn reaches end, but code checks for x == 8
      */
     // @Test
     public void testBlackPawnMoveAtEnd() {
@@ -290,10 +290,11 @@ public class PawnTest {
      * [BLACKBOX] Test if D5 white pawn has en passant move when black pawn moves to E5.
      * https://en.wikipedia.org/wiki/En_passant
      *
-     * BUG FOUND: En passant special rule not implemented
+     * Fault: En passant special rule not implemented
      */
     // @Test
     public void testEnPassantSpecialMove() {
+        board[3][5] = new Cell(3, 5, new Pawn("BP02", "/Black_Pawn.png", 1));
         blackPawn.move(board, 3, 4);
         Set<Cell> expected = new HashSet<>(Arrays.asList(
                 board[2][3],

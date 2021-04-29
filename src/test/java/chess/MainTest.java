@@ -166,7 +166,7 @@ public class MainTest {
         assertFalse(main.checkmate(1));
     }
 
-    // Fault: checkmate returns true on stalemate end game
+    // Fault: checkmate returns true on stalemate
     // @Test
     public void testCheckMateFalseStaleMate() {
         Main.bk = new King("BK","/Black_King.png",1,0, 3);
